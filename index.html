@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau Dashboard Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f0f2f5 0%, #e3e8ee 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a3c6d;
+        }
+
+        nav a {
+            color: #1a3c6d;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #3b82f6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .intro h1 {
+            font-size: 2.25rem;
+            color: #1a3c6d;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro p {
+            font-size: 1.125rem;
+            color: #555;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .dashboard-container {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease 0.2s forwards;
+        }
+
+        .tableau-embed {
+            width: 100%;
+            height: 800px; /* Increased height for better dashboard visibility */
+            border: none;
+            display: block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: #555;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                display: flex;
+                gap: 1rem;
+            }
+
+            .intro h1 {
+                font-size: 1.75rem;
+            }
+
+            .intro p {
+                font-size: 1rem;
+            }
+
+            .tableau-embed {
+                height: 600px; /* Adjusted for mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">Data Insights</div>
+            <nav>
+                <a href="#home">Home</a>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="intro">
+            <h1>Explore Our Data Visualization</h1>
+            <p>Discover actionable insights through our interactive Tableau dashboard, designed to present data in a clear and engaging way.</p>
+        </section>
+
+        <section class="dashboard-container" id="dashboard">
+            <div id="tableauViz"></div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Data Insights. All rights reserved.</p>
+    </footer>
+
+    <script src="https://public.tableau.com/javascripts/api/tableau-2.min.js"></script>
+    <script>
+        // Initialize Tableau Viz
+        function initViz() {
+            const containerDiv = document.getElementById("tableauViz");
+            const vizUrl = "https://public.tableau.com/views/_17457558564750/Dashboard1?:language=en-US&:display_count=n&:origin=viz_share_link";
+            const options = {
+                hideTabs: true,
+                hideToolbar: true,
+                width: "100%",
+                height: "800px",
+                onFirstInteractive: function () {
+                    console.log("Tableau dashboard loaded.");
+                }
+            };
+
+            // Create new Tableau Viz
+            const viz = new tableau.Viz(containerDiv, vizUrl, options);
+
+            // Handle resize for responsiveness
+            window.addEventListener('resize', () => {
+                viz.setFrameSize("100%", "800px");
+            });
+        }
+
+        // Load Viz when page is ready
+        document.addEventListener("DOMContentLoaded", initViz);
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId) || document.querySelector('header');
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Trigger animation on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.dashboard-container, .intro').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
